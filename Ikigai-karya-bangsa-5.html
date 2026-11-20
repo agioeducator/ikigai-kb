@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>SMK Karya Bangsa — Pemetaan Minat & Bakat Digital Marketing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root { --primary: #00A86B; --primary-dark: #008F5A; --primary-light: #00C48C; --accent: #34D399; --bg-light: #f4fbf7; --card-shadow: 0 10px 40px rgba(0, 168, 107, 0.10); --radius: 20px; }
+        * { box-sizing: border-box; }
+        body { background: var(--bg-light); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 20px; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+        body.dark-mode { background: #0f1f18; color: #d8f0e3; }
+        body.dark-mode .card, body.dark-mode .bg-white { background: #12291f !important; color: #d8f0e3 !important; border-color: #1f4a38 !important; }
+        body.dark-mode .nav-tabs .nav-link { color: #9ed3b8; }
+        body.dark-mode .nav-tabs .nav-link.active { background: #12291f; color: var(--primary-light); border-color: var(--primary-light); }
+        body.dark-mode .prompt-box { background: #0e241b; border-color: #1f4a38; color: #c8e8d6; }
+        body.dark-mode .form-control, body.dark-mode .form-select { background: #0e241b; border-color: #1f4a38; color: #d8f0e3; }
+        body.dark-mode .form-control:focus, body.dark-mode .form-select:focus { background: #0e241b; color: #d8f0e3; }
+        .app-container { max-width: 1100px; margin: 0 auto; }
+        .navbar-custom { background: linear-gradient(90deg, #5ee0b0 0%, #00C48C 35%, #00A86B 70%, #006B45 100%) !important; border-radius: 16px; padding: 12px 20px; box-shadow: 0 8px 25px rgba(0, 168, 107, 0.35); margin-bottom: 0px; }
+        .navbar-custom .navbar-brand { color: #ffffff !important; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.25); }
+        .navbar-custom .navbar-brand:hover { color: #e8fff5 !important; }
+        .navbar-custom .badge { background: rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.25); }
+        .navbar-custom .dark-toggle { color: #ffffff !important; }
+        .navbar-custom .dark-toggle:hover { color: #e8fff5 !important; }
+        body.dark-mode .navbar-custom { background: linear-gradient(90deg, #00A86B 0%, #008F5A 50%, #004d31 100%) !important; }
+        body.dark-mode .navbar-custom .navbar-brand, body.dark-mode .navbar-custom .badge, body.dark-mode .navbar-custom .dark-toggle { color: #ffffff !important; }
+        .card { border: none; border-radius: var(--radius); box-shadow: var(--card-shadow); transition: transform 0.2s; background: #ffffff; }
+        .card-header { background: transparent; border-bottom: 1px solid rgba(0, 168, 107, 0.12); font-weight: 700; padding: 1.25rem 1.5rem; }
+        .btn-primary { background: var(--primary); border: none; border-radius: 12px; padding: 12px 28px; font-weight: 600; transition: all 0.2s; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 168, 107, 0.35); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline-primary { border-radius: 12px; border-color: var(--primary); color: var(--primary); }
+        .btn-outline-primary:hover { background: var(--primary); color: #fff; }
+        .btn-upload { background: #00A86B; border: none; border-radius: 12px; padding: 10px 24px; font-weight: 600; color: white; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-upload:hover { background: #008F5A; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 168, 107, 0.35); color: white; }
+        .btn-success { background: #008F5A !important; border: none; }
+        .btn-success:hover { background: #007a4d !important; }
+        .progress-bar-custom { height: 8px; border-radius: 10px; background: #e2f3eb; overflow: hidden; }
+        .progress-bar-custom .bar { height: 100%; background: linear-gradient(90deg, #34D399, #00A86B); border-radius: 10px; width: 0%; transition: width 0.5s ease; }
+        .section-badge { background: rgba(0, 168, 107, 0.12); color: var(--primary); padding: 6px 18px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.3px; }
+        .question-text { font-weight: 500; font-size: 1.05rem; margin-bottom: 0.75rem; }
+        .form-control, .form-select { border-radius: 12px; border: 1px solid #d5ebe0; padding: 12px 16px; transition: 0.2s; background: #f7fdfa; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 168, 107, 0.15); }
+        .prompt-box { background: #f4fbf7; border-radius: 16px; padding: 20px; max-height: 420px; overflow-y: auto; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.7; border: 1px solid #d5ebe0; font-family: 'Courier New', monospace; }
+        .nav-tabs .nav-link { border-radius: 12px 12px 0 0; font-weight: 500; color: #6b7280; }
+        .nav-tabs .nav-link.active { color: var(--primary); font-weight: 600; border-bottom: 3px solid var(--primary); }
+        .stat-number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .dark-toggle { cursor: pointer; font-size: 1.3rem; color: #6b7280; transition: 0.2s; }
+        .dark-toggle:hover { color: var(--primary); }
+        .copy-btn { border-radius: 40px; padding: 6px 18px; font-size: 0.8rem; }
+        .scale-btn { min-width: 44px; height: 44px; border-radius: 8px; border: 1px solid #cfe9dd; background: white; transition: all 0.15s; font-weight: 600; }
+        .scale-btn:hover { border-color: var(--primary); background: rgba(0, 168, 107, 0.06); }
+        .scale-btn.active-scale { background: var(--primary); color: white; border-color: var(--primary); }
+        body.dark-mode .scale-btn { background: #0e241b; border-color: #1f4a38; color: #d8f0e3; }
+        body.dark-mode .scale-btn.active-scale { background: var(--primary); color: white; }
+        .banner-wrapper { width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0, 168, 107, 0.12); background-color: #e8f7ef; position: relative; }
+        .banner-image { width: 100%; height: auto; display: block; object-fit: contain; background-color: #e8f7ef; aspect-ratio: auto; }
+        .navbar-custom .navbar-brand img { height: 70px; width: auto; margin-right: 10px; border-radius: 8px; object-fit: contain; }
+        body.dark-mode .banner-wrapper { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); background-color: #12291f; }
+        .track-article { color: #0984e3; }
+        .track-video { color: #e17055; }
+        .track-web { color: #6c5ce7; }
+        .track-graphic { color: #e84393; }
+        .track-card { border-radius: 16px; padding: 18px; background: #ffffff; border: 2px solid #e2f3eb; transition: all 0.2s; }
+        .track-card:hover { transform: translateY(-2px); }
+        .track-card.winner { border-color: var(--primary); box-shadow: 0 8px 25px rgba(0, 168, 107, 0.2); }
+        .track-card .track-score { font-size: 2rem; font-weight: 800; }
+        .track-card .track-icon { font-size: 1.6rem; margin-bottom: 6px; }
+        .track-bar { height: 10px; border-radius: 6px; background: #e2f3eb; overflow: hidden; margin-top: 8px; }
+        .track-bar .fill { height: 100%; border-radius: 6px; transition: width 0.6s; }
+        .fill-article { background: linear-gradient(90deg, #74b9ff, #0984e3); }
+        .fill-video { background: linear-gradient(90deg, #fab1a0, #e17055); }
+        .fill-web { background: linear-gradient(90deg, #a29bfe, #6c5ce7); }
+        .fill-graphic { background: linear-gradient(90deg, #fd79a8, #e84393); }
+        .winner-badge { display: inline-block; background: rgba(0, 168, 107, 0.15); color: #008F5A; padding: 4px 14px; border-radius: 40px; font-size: 0.75rem; font-weight: 700; }
+        .result-hero { text-align: center; padding: 30px; border-radius: 20px; background: linear-gradient(135deg, #008F5A 0%, #00C48C 55%, #5ee0b0 100%); color: white; }
+        .result-hero .hero-icon { font-size: 3rem; }
+        .result-hero .hero-title { font-size: 1.6rem; font-weight: 800; margin-top: 8px; }
+        .result-hero .hero-sub { opacity: 0.95; margin-top: 4px; }
+        .alert-warning-custom { background: #fff3cd; border: 1px solid #ffe69c; color: #664d03; border-radius: 12px; padding: 10px 16px; font-size: 0.9rem; }
+        body.dark-mode .alert-warning-custom { background: #3a2e12; border-color: #5a4a1f; color: #f7e6a8; }
+        @media (max-width: 576px) {
+            body { padding: 12px; }
+            .navbar-custom { padding: 10px 16px; border-radius: 12px; }
+            .question-text { font-size: 0.95rem; }
+            .nav-tabs .nav-link { font-size: 0.7rem; padding: 8px 6px; white-space: nowrap; }
+            .banner-wrapper { border-radius: 12px; margin-bottom: 16px; }
+            .navbar-custom .navbar-brand img { height: 40px; }
+            .stat-number { font-size: 1.5rem; }
+            .scale-btn { min-width: 36px; height: 36px; font-size: 0.9rem; }
+            .prompt-box { font-size: 0.8rem; max-height: 300px; padding: 14px; }
+            .card-body { padding: 1rem !important; }
+            .card-header { padding: 0.75rem 1rem !important; }
+        }
+        @media (max-width: 400px) {
+            .nav-tabs .nav-link { font-size: 0.6rem; padding: 6px 4px; }
+            .navbar-custom .navbar-brand { font-size: 0.9rem; }
+            .navbar-custom .navbar-brand img { height: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" id="app">
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container-fluid px-0">
+                <a class="navbar-brand fw-bold" href="#">
+                    <img src="https://grossmart.biz.id/uploads/Logo-SMK-Karya-Bangsa-removebg-preview.png" alt="Logo SMK Karya Bangsa" loading="lazy" decoding="async" />
+                    SMK KARYA BANGSA
+                </a>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="dark-toggle" id="darkToggle" title="Toggle Dark Mode"><i class="fas fa-moon"></i></span>
+                    <span class="badge px-3 py-2 rounded-pill"><i class="fas fa-seedling me-1"></i> Pemetaan Bakat (Pemula)</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- BANNER -->
+        <div class="banner-wrapper">
+            <img src="https://grossmart.biz.id/uploads/Poster Promosi Assessment Digital Marketing.webp"
+                 alt="Poster Promosi Assessment Digital Marketing"
+                 class="banner-image" loading="lazy" decoding="async" width="1100" height="400" />
+        </div>
+
+        <!-- TABS -->
+        <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation"><button class="nav-link active" id="tab-dashboard" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab"><i class="fas fa-home me-1"></i> Dashboard</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="tab-interview" data-bs-toggle="tab" data-bs-target="#interview" type="button" role="tab"><i class="fas fa-clipboard-question me-1"></i> Asesmen</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="tab-result" data-bs-toggle="tab" data-bs-target="#result" type="button" role="tab"><i class="fas fa-chart-pie me-1"></i> Hasil Pemetaan</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="tab-prompts" data-bs-toggle="tab" data-bs-target="#prompts" type="button" role="tab"><i class="fas fa-wand-magic-sparkles me-1"></i> Prompt AI</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="tab-download" data-bs-toggle="tab" data-bs-target="#download" type="button" role="tab"><i class="fas fa-download me-1"></i> Download</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- DASHBOARD -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-7">
+                        <div class="card p-4">
+                            <h3 class="fw-bold mb-2"><i class="fas fa-seedling text-primary me-2"></i> Pemetaan Minat & Bakat</h3>
+                            <p class="text-secondary">Asesmen ini <strong>tidak menguji kemampuan teknis</strong>. Tujuannya untuk memetakan minat, bakat alami, dan preferensi belajarmu, agar kami bisa mengarahkanmu ke jalur digital marketing yang paling cocok.</p>
+                            <div class="d-flex flex-wrap gap-3 mt-3">
+                                <button class="btn btn-primary" @click="goToInterview"><i class="fas fa-play me-2"></i> Mulai Asesmen</button>
+                                <button class="btn btn-outline-primary" @click="resetAll"><i class="fas fa-rotate-right me-2"></i> Reset</button>
+                                <!-- Tombol Upload diubah memanggil fungsi kirim ke GAS -->
+                                <button @click="kirimKeSpreadsheet" class="btn btn-success" :disabled="isSending">
+                                    <i class="fas fa-cloud-upload-alt me-2"></i> {{ isSending ? 'Mengirim...' : 'Upload Data' }}
+                                </button>
+                            </div>
+                            <hr class="my-4" />
+                            <div class="row text-center">
+                                <div class="col-6 col-md-3"><div class="stat-number">{{ totalQuestions }}</div><div class="text-secondary small">Total Pertanyaan</div></div>
+                                <div class="col-6 col-md-3"><div class="stat-number">{{ answeredCount }}</div><div class="text-secondary small">Terjawab</div></div>
+                                <div class="col-6 col-md-3"><div class="stat-number">{{ progressPercent }}%</div><div class="text-secondary small">Progress</div></div>
+                                <div class="col-6 col-md-3"><div class="stat-number">{{ currentSection }}/{{ totalSections }}</div><div class="text-secondary small">Bagian</div></div>
+                            </div>
+                            <div class="progress-bar-custom mt-3"><div class="bar" :style="{ width: progressPercent + '%' }"></div></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card p-4 h-100">
+                            <h5 class="mb-3"><i class="fas fa-route text-primary me-2"></i> Jalur Spesialisasi</h5>
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-file-lines track-article"></i><strong>Konten Artikel</strong></div>
+                                <small class="text-secondary">Suka merangkai kata, bercerita, dan menulis informasi.</small>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-video track-video"></i><strong>Konten Video</strong></div>
+                                <small class="text-secondary">Suka melihat, merekam, dan mengolah video pendek.</small>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-window-maximize track-web"></i><strong>Desain Landing Page / Website</strong></div>
+                                <small class="text-secondary">Suka menata, menyusun, dan mengatur tampilan secara rapi.</small>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-palette track-graphic"></i><strong>Desain Gambar Promosi</strong></div>
+                                <small class="text-secondary">Suka menggambar, memadukan warna, dan membuat visual.</small>
+                            </div>
+                            <small class="text-secondary d-block mt-2"><i class="fas fa-info-circle me-1"></i> Tidak ada jawaban benar/salah. Jawab sesuai dirimu.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASESMEN -->
+            <div class="tab-pane fade" id="interview" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                        <span><span class="section-badge">Bagian {{ currentSection }} / {{ totalSections }}</span><span class="ms-2 fw-semibold">{{ sectionTitle }}</span></span>
+                        <span class="text-secondary small">{{ answeredCount }} / {{ totalQuestions }} terjawab</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="progress-bar-custom mb-4"><div class="bar" :style="{ width: progressPercent + '%' }"></div></div>
+                        
+                        <!-- Peringatan jika belum lengkap -->
+                        <div v-if="isCurrentSectionIncomplete" class="alert alert-warning-custom mb-4 d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span>Harap jawab semua pertanyaan di bagian ini sebelum melanjutkan.</span>
+                        </div>
+
+                        <div id="questionsContainer">
+                            <div v-for="(q, idx) in currentQuestions" :key="q.id" class="mb-4">
+                                <div class="question-text">{{ q.text }}</div>
+                                <div v-if="q.type === 'text'"><input type="text" class="form-control" :id="'input_' + q.id" :name="q.id" :placeholder="q.placeholder || 'Tulis jawaban...'" v-model="answers[q.id]" /></div>
+                                <div v-else-if="q.type === 'textarea'"><textarea class="form-control" :id="'input_' + q.id" :name="q.id" rows="3" :placeholder="q.placeholder || 'Ceritakan detail...'" v-model="answers[q.id]"></textarea></div>
+                                <div v-else-if="q.type === 'select'"><select class="form-select" :id="'input_' + q.id" :name="q.id" v-model="answers[q.id]"><option value="">Pilih...</option><option v-for="opt in q.options" :key="opt" :value="opt">{{ opt }}</option></select></div>
+                                <div v-else-if="q.type === 'scale'">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button v-for="n in 10" :key="n" class="scale-btn" @click="answers[q.id] = n" :class="{ 'active-scale': answers[q.id] == n }">{{ n }}</button>
+                                    </div>
+                                    <small class="text-secondary">(1 = sama sekali tidak suka, 10 = sangat suka)</small>
+                                </div>
+                                <div v-else-if="q.type === 'radio'"><div class="d-flex flex-wrap gap-3"><div v-for="opt in q.options" :key="opt" class="form-check"><input class="form-check-input" type="radio" :id="'radio_' + q.id + '_' + opt" :name="q.id" :value="opt" v-model="answers[q.id]" /><label class="form-check-label" :for="'radio_' + q.id + '_' + opt">{{ opt }}</label></div></div></div>
+                                
+                                <!-- CHECKBOX -->
+                                <div v-else-if="q.type === 'checkbox'">
+                                    <div v-for="opt in q.options" :key="opt" class="form-check">
+                                        <input 
+                                            class="form-check-input" 
+                                            type="checkbox" 
+                                            :id="'checkbox_' + q.id + '_' + opt" 
+                                            :value="opt" 
+                                            :checked="Array.isArray(answers[q.id]) && answers[q.id].includes(opt)"
+                                            @change="(e) => {
+                                                if (!Array.isArray(answers[q.id])) answers[q.id] = [];
+                                                if (e.target.checked) {
+                                                    answers[q.id].push(opt);
+                                                } else {
+                                                    answers[q.id] = answers[q.id].filter(v => v !== opt);
+                                                }
+                                            }"
+                                        />
+                                        <label class="form-check-label" :for="'checkbox_' + q.id + '_' + opt">{{ opt }}</label>
+                                    </div>
+                                    <small class="text-secondary">(boleh pilih lebih dari satu)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                            <button class="btn btn-outline-secondary" @click="prevSection" :disabled="currentSection <= 1"><i class="fas fa-arrow-left me-1"></i> Kembali</button>
+                            <button class="btn btn-primary" @click="nextSection" :disabled="isCurrentSectionIncomplete">
+                                {{ currentSection >= totalSections ? 'Selesai & Lihat Hasil' : 'Selanjutnya' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HASIL PEMETAAN -->
+            <div class="tab-pane fade" id="result" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-chart-pie me-2 text-primary"></i> Hasil Pemetaan Bakat</span>
+                        <span class="winner-badge" v-if="topTrack"><i class="fas fa-trophy me-1"></i> {{ topTrack.name }}</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="result-hero mb-4" v-if="topTrack">
+                            <div class="hero-icon"><i :class="topTrack.icon"></i></div>
+                            <div class="hero-title">Jalur Paling Cocok: {{ topTrack.name }}</div>
+                            <div class="hero-sub">{{ topTrack.desc }}</div>
+                        </div>
+                        <div v-else class="text-center py-4 text-secondary">
+                            <i class="fas fa-info-circle fa-2x mb-2 opacity-50"></i>
+                            <p>Belum ada jawaban. Silakan isi asesmen terlebih dahulu.</p>
+                        </div>
+
+                        <h6 class="mb-3">Skor per Jalur</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6" v-for="track in tracks" :key="track.key">
+                                <div class="track-card" :class="{ winner: topTrack && topTrack.key === track.key }">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <div class="track-icon" :class="'track-' + track.key"><i :class="track.icon"></i></div>
+                                            <strong>{{ track.name }}</strong>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="track-score" :class="'track-' + track.key">{{ track.score }}</div>
+                                            <small class="text-secondary">/ 100</small>
+                                        </div>
+                                    </div>
+                                    <div class="track-bar"><div class="fill" :class="'fill-' + track.key" :style="{ width: track.score + '%' }"></div></div>
+                                    <small class="text-secondary d-block mt-2">{{ track.short }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4" v-if="topTrack">
+                            <h6><i class="fas fa-lightbulb text-warning me-1"></i> Interpretasi</h6>
+                            <p class="small mb-2">{{ interpretation }}</p>
+                            <h6 class="mt-3"><i class="fas fa-shoe-prints text-primary me-1"></i> Langkah Awal yang Disarankan</h6>
+                            <ul class="small">
+                                <li v-for="step in nextSteps" :key="step"><i class="fas fa-check-circle text-success me-1"></i> {{ step }}</li>
+                            </ul>
+                        </div>
+
+                        <!-- Tombol Kirim Hasil ke GAS -->
+                        <div class="mt-4">
+                            <button @click="kirimKeSpreadsheet" class="btn btn-success w-100" :disabled="isSending">
+                                <i class="fas fa-cloud-upload-alt me-2"></i> {{ isSending ? 'Mengirim Data...' : 'Kirim Hasil ke Spreadsheet' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROMPT AI -->
+            <div class="tab-pane fade" id="prompts" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-wand-magic-sparkles me-2 text-primary"></i> Prompt AI untuk Siswa & Mentor</span>
+                        <span class="badge bg-success">{{ answeredCount }}/{{ totalQuestions }} data</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3 d-flex flex-wrap gap-2">
+                            <button class="btn btn-primary btn-sm" @click="generatePrompt('path')"><i class="fas fa-road me-1"></i> Learning Path</button>
+                            <button class="btn btn-outline-primary btn-sm" @click="generatePrompt('portfolio')"><i class="fas fa-briefcase me-1"></i> Ide Portofolio</button>
+                            <button class="btn btn-outline-primary btn-sm" @click="generatePrompt('tools')"><i class="fas fa-tools me-1"></i> Tools Belajar</button>
+                            <button class="btn btn-outline-primary btn-sm" @click="generatePrompt('mentor')"><i class="fas fa-user-tie me-1"></i> Catatan Mentor</button>
+                        </div>
+                        <div v-if="activePrompt">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-0"><i class="fas fa-quote-left text-primary me-1"></i> {{ activePromptLabel }}</h6>
+                                <button class="btn btn-sm btn-outline-secondary copy-btn" @click="copyPrompt"><i class="fas fa-copy me-1"></i> Copy</button>
+                            </div>
+                            <div class="prompt-box">{{ activePrompt }}</div>
+                        </div>
+                        <div v-else class="text-center py-5 text-secondary">
+                            <i class="fas fa-robot fa-3x mb-3 opacity-25"></i>
+                            <p>Isi asesmen terlebih dahulu, lalu pilih prompt AI yang ingin dihasilkan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOWNLOAD -->
+            <div class="tab-pane fade" id="download" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-download me-2 text-primary"></i>Download Hasil</span>
+                        <!-- Tombol Upload diubah memanggil fungsi kirim ke GAS -->
+                        <button @click="kirimKeSpreadsheet" class="btn-upload btn-sm" style="padding: 6px 16px; font-size: 0.85rem;" :disabled="isSending">
+                            <i class="fas fa-cloud-upload-alt me-1"></i> {{ isSending ? 'Mengirim...' : 'Upload' }}
+                        </button>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-secondary">Download hasil asesmen & pemetaan bakat siswa.</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <button class="btn btn-outline-primary" @click="exportTXT"><i class="fas fa-file-lines me-2"></i> Download TXT</button>
+                            <button class="btn btn-outline-primary" @click="exportPDF"><i class="fas fa-file-pdf me-2"></i> Download PDF</button>
+                            <button class="btn btn-outline-primary" @click="exportCSV"><i class="fas fa-file-csv me-2"></i> Download CSV</button>
+                        </div>
+                        <hr />
+                        <div class="small text-secondary"><i class="fas fa-info-circle me-1"></i> Data disimpan otomatis di browser (LocalStorage). Gunakan tombol Reset untuk memulai siswa baru.</div>
+                        <div class="mt-3">
+                            <button @click="kirimKeSpreadsheet" class="btn btn-success w-100" :disabled="isSending">
+                                <i class="fas fa-cloud-upload-alt me-2"></i> {{ isSending ? 'Mengirim Data...' : 'Kirim Data ke Spreadsheet' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center text-secondary small mt-5 pt-3 border-top"><i class="fas fa-seedling text-primary me-1"></i> SMK KARYA BANGSA — Pemetaan Minat & Bakat Digital Marketing</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        const { createApp, ref, computed, watch, onMounted, reactive } = Vue;
+
+        // ================= KONFIGURASI GAS =================
+        // GANTI URL DI BAWAH INI DENGAN URL WEB APP DARI GOOGLE APPS SCRIPT ANDA
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby7nhlvXzzOCU3to6b6GZvEaUjyJgkS06j9S5pqyZ_hTAvG0DbKbNld3cKwY30ryL3geg/exec";
+
+        // ================= TRACKS =================
+        const TRACKS = [
+            { key: 'article', name: 'Pembuat Konten Artikel', icon: 'fas fa-file-lines', short: 'Suka merangkai kata, bercerita, dan menulis informasi.', desc: 'Kamu kemungkinan besar cocok mengembangkan kemampuan menulis: artikel blog, caption, copywriting, dan cerita berbasis teks.' },
+            { key: 'video', name: 'Pembuat Konten Video', icon: 'fas fa-video', short: 'Suka melihat, merekam, dan mengolah video pendek.', desc: 'Kamu kemungkinan besar cocok mengembangkan kemampuan produksi video: shooting, editing, dan konten pendek (reels/TikTok).' },
+            { key: 'web', name: 'Desain Landing Page / Website', icon: 'fas fa-window-maximize', short: 'Suka menata, menyusun, dan mengatur tampilan secara rapi.', desc: 'Kamu kemungkinan besar cocok mengembangkan kemampuan desain & build website: layout, UX, wireframe, dan tools seperti WordPress/Webflow.' },
+            { key: 'graphic', name: 'Desain Gambar Promosi', icon: 'fas fa-palette', short: 'Suka menggambar, memadukan warna, dan membuat visual.', desc: 'Kamu kemungkinan besar cocok mengembangkan kemampuan desain grafis: poster, carousel, banner, feed IG, dan brand visual.' },
+        ];
+
+        // ================= DATA ASESMEN (PEMULA - 25+ PERTANYAAN) =================
+        const SECTIONS = [
+            { id: 1, title: 'Tentang Dirimu', questions: [
+                { id: 'nama', text: 'Nama lengkap kamu', type: 'text', placeholder: 'Nama lengkap...' },
+                { id: 'usia', text: 'Usia kamu', type: 'text', placeholder: 'Contoh: 16' },
+                { id: 'asal_sekolah', text: 'Asal sekolah / kelas', type: 'text', placeholder: 'SMK Karya Bangsa — Kelas X...' },
+                { id: 'pengalaman_dm', text: 'Pernahkah kamu membuat konten digital (tulisan, video, desain, atau website)?', type: 'select', options: ['Belum pernah sama sekali', 'Pernah iseng coba-coba', 'Pernah beberapa kali', 'Sering membuat'], track: 'none' },
+            ]},
+            { id: 2, title: 'Aktivitas yang Kamu Sukai', questions: [
+                { id: 'suka_menulis', text: 'Seberapa suka kamu menulis (diary, caption, cerita, artikel)?', type: 'scale', track: 'article', weight: 2.5 },
+                { id: 'suka_video', text: 'Seberapa suka kamu menonton / membuat video pendek?', type: 'scale', track: 'video', weight: 2.5 },
+                { id: 'suka_web', text: 'Seberapa suka kamu menata barang / halaman agar rapi dan enak dilihat?', type: 'scale', track: 'web', weight: 2.5 },
+                { id: 'suka_desain', text: 'Seberapa suka kamu menggambar, mewarnai, atau membuat visual?', type: 'scale', track: 'graphic', weight: 2.5 },
+            ]},
+            { id: 3, title: 'Hal yang Bikin Kamu Penasaran', questions: [
+                { id: 'penasaran', text: 'Hal mana yang paling membuat kamu penasaran?', type: 'radio', options: ['Cara merangkai kata agar orang tertarik membaca', 'Cara membuat video yang seru dan enak ditonton', 'Cara menyusun tampilan website yang rapi', 'Cara membuat desain yang terlihat keren'], optionTracks: { 'Cara merangkai kata agar orang tertarik membaca': 'article', 'Cara membuat video yang seru dan enak ditonton': 'video', 'Cara menyusun tampilan website yang rapi': 'web', 'Cara membuat desain yang terlihat keren': 'graphic' }, weight: 3 },
+                { id: 'lupa_waktu', text: 'Saat melakukan hal apa kamu bisa lupa waktu?', type: 'radio', options: ['Menulis & merangkai cerita', 'Menonton / mengedit video', 'Mengatur tampilan & susunan', 'Menggambar & mendesain'], optionTracks: { 'Menulis & merangkai cerita': 'article', 'Menonton / mengedit video': 'video', 'Mengatur tampilan & susunan': 'web', 'Menggambar & mendesain': 'graphic' }, weight: 3 },
+            ]},
+            { id: 4, title: 'Cara Kamu Menyelesaikan Tugas', questions: [
+                { id: 'cara_tugas', text: 'Kalau diberi tugas bebas oleh guru, kamu paling memilih...', type: 'radio', options: ['Membuat tulisan / laporan', 'Membuat video presentasi', 'Membuat poster / infografis', 'Menyusun presentasi yang rapi'], optionTracks: { 'Membuat tulisan / laporan': 'article', 'Membuat video presentasi': 'video', 'Membuat poster / infografis': 'graphic', 'Menyusun presentasi yang rapi': 'web' }, weight: 2.5 },
+                { id: 'cara_masalah', text: 'Saat ada masalah, kamu lebih suka...', type: 'radio', options: ['Memikirkannya dengan menulis', 'Membicarakannya lewat video/voice note', 'Membuat rencana & langkah-langkah', 'Menggambar / membuat sketsa solusi'], optionTracks: { 'Memikirkannya dengan menulis': 'article', 'Membicarakannya lewat video/voice note': 'video', 'Membuat rencana & langkah-langkah': 'web', 'Menggambar / membuat sketsa solusi': 'graphic' }, weight: 2 },
+            ]},
+            { id: 5, title: 'Kebiasaan Sehari-hari', questions: [
+                { id: 'medsos_favorit', text: 'Aktivitas apa yang paling sering kamu lakukan di HP?', type: 'checkbox', options: ['Membaca artikel / thread / cerita', 'Menonton video pendek (TikTok/Reels)', 'Membuka website / searching', 'Melihat desain / feed IG yang estetik'], optionTracks: { 'Membaca artikel / thread / cerita': 'article', 'Menonton video pendek (TikTok/Reels)': 'video', 'Membuka website / searching': 'web', 'Melihat desain / feed IG yang estetik': 'graphic' }, weight: 2 },
+                { id: 'hobi', text: 'Hobi yang paling kamu nikmati', type: 'radio', options: ['Menulis & membaca', 'Menonton film / bikin video', 'Main game strategi / puzzle', 'Menggambar / mewarnai / desain'], optionTracks: { 'Menulis & membaca': 'article', 'Menonton film / bikin video': 'video', 'Main game strategi / puzzle': 'web', 'Menggambar / mewarnai / desain': 'graphic' }, weight: 2 },
+            ]},
+            { id: 6, title: 'Gaya Belajar', questions: [
+                { id: 'gaya_belajar', text: 'Cara belajar seperti apa yang paling cocok untukmu?', type: 'radio', options: ['Membaca materi & catatan', 'Melihat video tutorial', 'Mempraktikkan langsung langkah demi langkah', 'Melihat contoh visual & gambar'], optionTracks: { 'Membaca materi & catatan': 'article', 'Melihat video tutorial': 'video', 'Mempraktikkan langsung langkah demi langkah': 'web', 'Melihat contoh visual & gambar': 'graphic' }, weight: 2 },
+                { id: 'belajar_baru', text: 'Saat belajar hal baru, kamu biasanya...', type: 'radio', options: ['Mencatat & merangkum', 'Menonton tutorial berulang', 'Mencoba langsung sampai bisa', 'Mencari contoh & meniru dulu'], optionTracks: { 'Mencatat & merangkum': 'article', 'Menonton tutorial berulang': 'video', 'Mencoba langsung sampai bisa': 'web', 'Mencari contoh & meniru dulu': 'graphic' }, weight: 1.5 },
+            ]},
+            { id: 7, title: 'Harapan & Target', questions: [
+                { id: 'target_3bulan', text: 'Setelah ikut kursus 3 bulan, kamu ingin bisa...', type: 'radio', options: ['Menulis artikel / caption yang menarik', 'Membuat video konten yang keren', 'Membuat website / landing page sendiri', 'Membuat desain promosi profesional'], optionTracks: { 'Menulis artikel / caption yang menarik': 'article', 'Membuat video konten yang keren': 'video', 'Membuat website / landing page sendiri': 'web', 'Membuat desain promosi profesional': 'graphic' }, weight: 3 },
+                { id: 'cita_cita', text: 'Kalau bisa memilih, kamu ingin dikenal sebagai...', type: 'radio', options: ['Penulis yang mampu memikat pembaca', 'Kreator video yang karyanya viral', 'Pembuat website yang rapi & profesional', 'Desainer yang punya ciri khas visual'], optionTracks: { 'Penulis yang mampu memikat pembaca': 'article', 'Kreator video yang karyanya viral': 'video', 'Pembuat website yang rapi & profesional': 'web', 'Desainer yang punya ciri khas visual': 'graphic' }, weight: 2.5 },
+            ]},
+            { id: 8, title: 'Gaya Komunikasi', questions: [
+                { id: 'komunikasi_lebih_suka', text: 'Kamu lebih nyaman berkomunikasi lewat...', type: 'radio', options: ['Tulisan panjang / chat detail', 'Video call / voice note', 'Penjelasan bertahap & terstruktur', 'Gambar / diagram / visual'], optionTracks: { 'Tulisan panjang / chat detail': 'article', 'Video call / voice note': 'video', 'Penjelasan bertahap & terstruktur': 'web', 'Gambar / diagram / visual': 'graphic' }, weight: 2 },
+                { id: 'cara_menjelaskan', text: 'Cara paling mudah bagimu menjelaskan sesuatu ke orang lain adalah...', type: 'radio', options: ['Menulis langkah-langkahnya', 'Memperagakan / membuat video', 'Membuat urutan poin-poin rapi', 'Menggambarkan sketsanya'], optionTracks: { 'Menulis langkah-langkahnya': 'article', 'Memperagakan / membuat video': 'video', 'Membuat urutan poin-poin rapi': 'web', 'Menggambarkan sketsanya': 'graphic' }, weight: 2.5 },
+            ]},
+            { id: 9, title: 'Tipe Konten Favorit', questions: [
+                { id: 'konten_favorit', text: 'Tipe konten digital yang paling sering kamu konsumsi?', type: 'checkbox', options: ['Artikel / blog / thread panjang', 'Video pendek / reels / TikTok', 'Website / landing page produk', 'Poster / carousel / desain grafis'], optionTracks: { 'Artikel / blog / thread panjang': 'article', 'Video pendek / reels / TikTok': 'video', 'Website / landing page produk': 'web', 'Poster / carousel / desain grafis': 'graphic' }, weight: 2 },
+                { id: 'konten_ingin_dibuat', text: 'Kalau bisa, konten seperti apa yang ingin kamu buat?', type: 'radio', options: ['Tulisan bermanfaat yang banyak dibaca', 'Video seru yang banyak ditonton', 'Website yang membantu orang', 'Desain yang menarik perhatian'], optionTracks: { 'Tulisan bermanfaat yang banyak dibaca': 'article', 'Video seru yang banyak ditonton': 'video', 'Website yang membantu orang': 'web', 'Desain yang menarik perhatian': 'graphic' }, weight: 2.5 },
+            ]},
+            { id: 10, title: 'Refleksi & Harapan', questions: [
+                { id: 'alasan_kursus', text: 'Kenapa kamu ingin belajar digital marketing?', type: 'textarea', placeholder: 'Contoh: ingin punya skill, ingin bikin konten, cari kerja...' },
+                { id: 'harapan', text: 'Harapan terbesar kamu setelah ikut kursus ini', type: 'textarea', placeholder: '...' },
+                { id: 'catatan', text: 'Ada hal lain yang ingin kamu ceritakan? (opsional)', type: 'textarea', placeholder: '...' },
+            ]},
+        ];
+
+        const ALL_QUESTIONS = SECTIONS.flatMap(s => s.questions);
+
+        const app = createApp({
+            setup() {
+                const currentSection = ref(1);
+                const answers = reactive({});
+                const activePrompt = ref('');
+                const activePromptLabel = ref('');
+                const isDark = ref(false);
+                const isSending = ref(false); // State untuk tombol upload
+
+                const totalSections = ref(SECTIONS.length);
+                const totalQuestions = computed(() => ALL_QUESTIONS.length);
+                const currentQuestions = computed(() => { const sec = SECTIONS.find(s => s.id === currentSection.value); return sec ? sec.questions : []; });
+                const sectionTitle = computed(() => { const sec = SECTIONS.find(s => s.id === currentSection.value); return sec ? sec.title : ''; });
+                const answeredCount = computed(() => { let c = 0; for (const q of ALL_QUESTIONS) { const v = answers[q.id]; if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0)) c++; } return c; });
+                const progressPercent = computed(() => Math.round((answeredCount.value / totalQuestions.value) * 100));
+
+                const isCurrentSectionIncomplete = computed(() => {
+                    return currentQuestions.value.some(q => {
+                        const v = answers[q.id];
+                        return v === undefined || v === null || v === '' || (Array.isArray(v) && v.length === 0);
+                    });
+                });
+
+                // ---------- SCORING ENGINE ----------
+                const tracks = computed(() => {
+                    const acc = { article: 0, video: 0, web: 0, graphic: 0 };
+                    let maxPossible = { article: 0, video: 0, web: 0, graphic: 0 };
+
+                    for (const q of ALL_QUESTIONS) {
+                        const val = answers[q.id];
+                        const w = q.weight || 1;
+
+                        if (q.type === 'scale' && q.track && q.track !== 'none') {
+                            maxPossible[q.track] += 10 * w;
+                            if (val) acc[q.track] += Number(val) * w;
+                        }
+                        else if (q.optionTracks) {
+                            if (q.type === 'checkbox' && Array.isArray(val)) {
+                                for (const opt of q.options) {
+                                    const t = q.optionTracks[opt];
+                                    if (t) maxPossible[t] += 10 * w;
+                                }
+                                for (const chosen of val) {
+                                    const t = q.optionTracks[chosen];
+                                    if (t) acc[t] += 10 * w;
+                                }
+                            } else if (val) {
+                                const t = q.optionTracks[val];
+                                if (t) {
+                                    maxPossible[t] += 10 * w;
+                                    acc[t] += 10 * w;
+                                }
+                            }
+                        }
+                    }
+
+                    return TRACKS.map(t => {
+                        const max = maxPossible[t.key] || 1;
+                        const score = Math.min(100, Math.round((acc[t.key] / max) * 100));
+                        return { ...t, score };
+                    });
+                });
+
+                const topTrack = computed(() => {
+                    const sorted = [...tracks.value].sort((a, b) => b.score - a.score);
+                    if (sorted[0] && sorted[0].score > 0) return sorted[0];
+                    return null;
+                });
+
+                const interpretation = computed(() => {
+                    if (!topTrack.value) return 'Belum ada cukup data untuk memberi interpretasi.';
+                    const t = topTrack.value;
+                    const sorted = [...tracks.value].sort((a, b) => b.score - a.score);
+                    const second = sorted[1];
+                    let text = `Berdasarkan jawaban, minat terbesarmu ada di jalur ${t.name} dengan skor ${t.score}/100. `;
+                    if (second && second.score > 0) text += `Jalur terdekat berikutnya adalah ${second.name} (${second.score}/100). `;
+                    text += t.desc;
+                    return text;
+                });
+
+                const nextSteps = computed(() => {
+                    if (!topTrack.value) return [];
+                    const k = topTrack.value.key;
+                    if (k === 'article') return ['Mulai biasakan diri menulis 3-5 paragraf setiap hari.', 'Baca artikel / cerita yang kamu suka, perhatikan cara penulisnya merangkai kata.', 'Coba tulis caption atau cerita pendek di media sosialmu.'];
+                    if (k === 'video') return ['Coba rekam video pendek (30 detik) tentang hal yang kamu suka.', 'Pelajari dasar editing di aplikasi gratis seperti CapCut.', 'Amati video yang viral, catat kenapa kamu suka video itu.'];
+                    if (k === 'web') return ['Perhatikan tampilan website/aplikasi yang sering kamu pakai.', 'Coba susun ulang tampilan (misal susunan feed IG) agar lebih rapi.', 'Pelajari dasar layout & grid lewat video tutorial.'];
+                    if (k === 'graphic') return ['Mulai kumpulkan referensi desain yang kamu suka.', 'Coba buat poster sederhana pakai Canva.', 'Latih memadukan warna dan memilih huruf yang enak dilihat.'];
+                    return [];
+                });
+
+                // ---------- NAV ----------
+                function goToInterview() { const t = document.querySelector('#tab-interview'); if (t) t.click(); }
+                function nextSection() {
+                    if (isCurrentSectionIncomplete.value) return;
+                    if (currentSection.value < totalSections.value) currentSection.value++;
+                    else { const t = document.querySelector('#tab-result'); if (t) t.click(); saveToLocalStorage(); }
+                    saveToLocalStorage();
+                }
+                function prevSection() { if (currentSection.value > 1) { currentSection.value--; saveToLocalStorage(); } }
+                function resetAll() { if (confirm('Reset semua data siswa? Data akan hilang.')) { for (const q of ALL_QUESTIONS) delete answers[q.id]; currentSection.value = 1; activePrompt.value = ''; activePromptLabel.value = ''; saveToLocalStorage(); } }
+
+                // ---------- KIRIM KE GOOGLE APPS SCRIPT ----------
+                async function kirimKeSpreadsheet() {
+                    if (GAS_URL.includes("XXXXXXXXXXXXX")) {
+                        alert("Peringatan: Anda belum mengganti GAS_URL di dalam kode. Silakan ganti dengan URL Web App Google Apps Script Anda.");
+                        return;
+                    }
+
+                    if (answeredCount.value < totalQuestions.value) {
+                        if (!confirm("Masih ada pertanyaan yang belum dijawab. Tetap kirim data?")) return;
+                    }
+
+                    isSending.value = true;
+                    const data = buildExportData();
+                    
+                    // Sisipkan hasil skor ke dalam payload
+                    data["Skor_Artikel"] = tracks.value.find(t => t.key === 'article').score;
+                    data["Skor_Video"] = tracks.value.find(t => t.key === 'video').score;
+                    data["Skor_Web"] = tracks.value.find(t => t.key === 'web').score;
+                    data["Skor_Graphic"] = tracks.value.find(t => t.key === 'graphic').score;
+                    data["Jalur_Utama"] = topTrack.value ? topTrack.value.name : "-";
+
+                    try {
+                        const response = await fetch(GAS_URL, {
+                            method: "POST",
+                            body: JSON.stringify(data),
+                            headers: {
+                                "Content-Type": "text/plain;charset=utf-8" // Menggunakan text/plain untuk menghindari masalah CORS preflight di GAS
+                            }
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.status === "success") {
+                            alert("Berhasil! Data siswa telah dikirim ke Google Spreadsheet.");
+                            // Opsional: Reset form setelah berhasil upload
+                            // resetAll(); 
+                        } else {
+                            alert("Gagal mengirim data: " + result.message);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        alert("Terjadi kesalahan koneksi saat mengirim data. Pastikan URL benar dan Web App di-deploy dengan akses 'Anyone'.");
+                    } finally {
+                        isSending.value = false;
+                    }
+                }
+
+                // ---------- PROMPT AI ----------
+                function generatePrompt(type) {
+                    const data = buildDataObject();
+                    let prompt = '', label = '';
+                    switch (type) {
+                        case 'path': prompt = buildPathPrompt(data); label = 'Learning Path Prompt'; break;
+                        case 'portfolio': prompt = buildPortfolioPrompt(data); label = 'Ide Portofolio Prompt'; break;
+                        case 'tools': prompt = buildToolsPrompt(data); label = 'Tools Belajar Prompt'; break;
+                        case 'mentor': prompt = buildMentorPrompt(data); label = 'Catatan Mentor Prompt'; break;
+                        default: prompt = 'Pilih tipe prompt yang valid.'; label = 'Error';
+                    }
+                    activePrompt.value = prompt; activePromptLabel.value = label;
+                }
+
+                function buildDataObject() { const data = {}; for (const q of ALL_QUESTIONS) { const v = answers[q.id]; if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0)) data[q.id] = v; } return data; }
+                function dataToText(data) {
+                    let p = '';
+                    for (const [key, val] of Object.entries(data)) {
+                        const q = ALL_QUESTIONS.find(q => q.id === key);
+                        const label = q ? q.text : key;
+                        p += `${label}: ${Array.isArray(val) ? val.join(', ') : val}\n`;
+                    }
+                    return p;
+                }
+                function trackSummaryText() {
+                    return tracks.value.map(t => `${t.name}: ${t.score}/100`).join('\n');
+                }
+
+                function buildPathPrompt(data) {
+                    return `Anda adalah mentor kursus Digital Marketing untuk siswa SMK pemula. Siswa ini BELUM punya pengalaman teknis, jadi buat panduan dari nol.
+
+=========================
+DATA SISWA
+=========================
+${dataToText(data)}
+
+=========================
+SKOR PEMETAAN JALUR
+=========================
+${trackSummaryText()}
+
+JALUR TERKUAT: ${topTrack.value ? topTrack.value.name : 'belum ada'}
+
+=========================
+OUTPUT YANG DIMINTA
+=========================
+1. Ringkasan minat & potensi siswa (3-4 kalimat, ramah).
+2. Konfirmasi jalur utama & potensi jalur pendukung.
+3. Learning path 12 minggu dari NOL (mingguan, konkret, ramah pemula).
+4. Materi & tugas praktik sederhana tiap minggu.
+5. Metrik keberhasilan di akhir kursus.
+6. Tips motivasi agar siswa konsisten belajar.
+
+Gunakan bahasa yang membangun, sederhana, dan cocok untuk siswa SMK pemula.`;
+                }
+
+                function buildPortfolioPrompt(data) {
+                    return `Anda adalah mentor portofolio digital marketing untuk siswa pemula. Berdasarkan hasil asesmen berikut, buatkan rencana portofolio sederhana dari nol.\n\nDATA SISWA:\n${dataToText(data)}\n\nSKOR: ${trackSummaryText()}\nJALUR UTAMA: ${topTrack.value ? topTrack.value.name : '-'}\n\nBerikan:\n1. 5 ide proyek portofolio sederhana yang bisa dikerjakan pemula.\n2. Deliverable akhir tiap proyek.\n3. Urutan pengerjaan (dari paling mudah).\n4. Cara mempublikasikan (IG, YouTube, blog, Behance, dsb.).\n5. Tips agar portofolio terlihat meyakinkan meski masih pemula.`;
+                }
+
+                function buildToolsPrompt(data) {
+                    return `Anda adalah instruktur tools digital marketing untuk pemula. Berdasarkan hasil asesmen berikut, rekomendasikan tools & sumber belajar gratis.\n\nDATA SISWA:\n${dataToText(data)}\n\nSKOR: ${trackSummaryText()}\nJALUR UTAMA: ${topTrack.value ? topTrack.value.name : '-'}\n\nBerikan:\n1. 3 tools wajib (gratis & mudah) untuk jalur utama.\n2. Sumber belajar gratis (YouTube, artikel, kursus) yang ramah pemula.\n3. Latihan pertama yang bisa dilakukan minggu ini (langkah demi langkah).\n4. Estimasi waktu belajar per minggu.\n5. Tips agar tidak overwhelmed saat baru mulai.`;
+                }
+
+                function buildMentorPrompt(data) {
+                    return `Anda adalah mentor kursus digital marketing. Buat catatan mentor & rekomendasi pendampingan untuk siswa pemula berikut.\n\nDATA SISWA:\n${dataToText(data)}\n\nSKOR: ${trackSummaryText()}\nJALUR UTAMA: ${topTrack.value ? topTrack.value.name : '-'}\n\nBerikan:\n1. Ringkasan singkat profil minat siswa.\n2. Kekuatan & potensi utama.\n3. Area yang perlu pendampingan.\n4. Strategi mentoring yang disarankan untuk pemula.\n5. Catatan untuk orang tua/wali (opsional).\n6. Target evaluasi bulanan.`;
+                }
+
+                function copyPrompt() {
+                    if (!activePrompt.value) return;
+                    navigator.clipboard.writeText(activePrompt.value).then(() => alert('Prompt disalin ke clipboard!')).catch(() => {
+                        const ta = document.createElement('textarea'); ta.value = activePrompt.value; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('Prompt disalin!');
+                    });
+                }
+                function exportTXT() { downloadFile(buildExportData(), 'smk_karya_bangsa_pemetaan_bakat.txt', 'text/plain'); }
+                function exportPDF() {
+                    const data = buildExportData(); const { jsPDF } = window.jspdf; const doc = new jsPDF('p', 'mm', 'a4');
+                    doc.setFontSize(18); doc.setTextColor(0, 168, 107); doc.text('SMK KARYA BANGSA — Pemetaan Bakat Digital Marketing', 14, 20);
+                    doc.setFontSize(12); doc.setTextColor(50);
+                    doc.text(topTrack.value ? `Jalur: ${topTrack.value.name} (${topTrack.value.score}/100)` : 'Jalur: belum ada data', 14, 30);
+                    doc.line(14, 33, 196, 33);
+                    let yPos = 40; doc.setFontSize(10); doc.setTextColor(80);
+                    for (const [key, val] of Object.entries(data)) {
+                        const q = ALL_QUESTIONS.find(q => q.id === key); const label = q ? q.text : key;
+                        if (yPos > 270) { doc.addPage(); yPos = 20; }
+                        doc.setTextColor(40); doc.setFont('helvetica', 'bold'); doc.text(label + ':', 14, yPos);
+                        doc.setFont('helvetica', 'normal'); doc.setTextColor(60);
+                        const valueText = Array.isArray(val) ? val.join(', ') : val;
+                        const lines = doc.splitTextToSize(valueText, 170); doc.text(lines, 14, yPos + 5); yPos += (lines.length * 5) + 8;
+                    }
+                    doc.setFontSize(12); doc.setTextColor(0, 168, 107); doc.text('Skor Pemetaan Jalur', 14, yPos + 5); yPos += 12;
+                    doc.setFontSize(10);
+                    for (const t of tracks.value) {
+                        if (yPos > 270) { doc.addPage(); yPos = 20; }
+                        doc.setTextColor(40); doc.text(`${t.name}: ${t.score}/100`, 14, yPos); yPos += 6;
+                    }
+                    if (activePrompt.value) { if (yPos > 250) { doc.addPage(); yPos = 20; } doc.setTextColor(40); doc.setFont('helvetica', 'bold'); doc.text('Generated Prompt:', 14, yPos); doc.setFont('helvetica', 'normal'); yPos += 6; const pl = doc.splitTextToSize(activePrompt.value, 180); doc.text(pl, 14, yPos); }
+                    doc.save('smk_karya_bangsa_pemetaan_bakat.pdf');
+                }
+                function exportCSV() {
+                    const data = buildExportData(); let csv = 'Pertanyaan,Jawaban\n';
+                    for (const [key, val] of Object.entries(data)) { const q = ALL_QUESTIONS.find(q => q.id === key); const label = q ? q.text : key; const value = Array.isArray(val) ? val.join('; ') : val; csv += `"${label}","${value}"\n`; }
+                    csv += `"\nHASIL PEMETAAN","\n`;
+                    for (const t of tracks.value) csv += `"${t.name}","${t.score}/100"\n`;
+                    csv += `"Jalur Utama","${topTrack.value ? topTrack.value.name : '-'}"\n`;
+                    downloadFile(csv, 'smk_karya_bangsa_pemetaan_bakat.csv', 'text/csv');
+                }
+                function buildExportData() { const data = {}; for (const q of ALL_QUESTIONS) { const v = answers[q.id]; if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0)) data[q.id] = v; } return data; }
+                function downloadFile(content, filename, mimeType) { const blob = new Blob([content], { type: mimeType }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = filename; link.click(); URL.revokeObjectURL(link.href); }
+
+                function saveToLocalStorage() { try { const data = {}; for (const q of ALL_QUESTIONS) if (answers[q.id] !== undefined) data[q.id] = answers[q.id]; localStorage.setItem('smk_kb_pemetaan_answers', JSON.stringify(data)); localStorage.setItem('smk_kb_pemetaan_section', currentSection.value); } catch (e) {} }
+                function loadFromLocalStorage() { 
+                    try { 
+                        const raw = localStorage.getItem('smk_kb_pemetaan_answers'); 
+                        if (raw) { 
+                            const d = JSON.parse(raw); 
+                            for (const [k, v] of Object.entries(d)) {
+                                const q = ALL_QUESTIONS.find(q => q.id === k);
+                                if (q && q.type === 'checkbox') {
+                                    answers[k] = Array.isArray(v) ? v : [];
+                                } else {
+                                    answers[k] = v;
+                                }
+                            } 
+                        } 
+                        const s = localStorage.getItem('smk_kb_pemetaan_section'); 
+                        if (s) currentSection.value = parseInt(s, 10) || 1; 
+                    } catch (e) {} 
+                }
+
+                function toggleDark() { isDark.value = !isDark.value; document.body.classList.toggle('dark-mode', isDark.value); localStorage.setItem('smk_kb_pemetaan_dark', isDark.value ? '1' : '0'); }
+                function loadDarkMode() { const v = localStorage.getItem('smk_kb_pemetaan_dark'); if (v === '1') { isDark.value = true; document.body.classList.add('dark-mode'); } }
+
+                onMounted(() => {
+                    loadDarkMode(); 
+                    loadFromLocalStorage();
+
+                    ALL_QUESTIONS.forEach(q => {
+                        if (q.type === 'checkbox' && !Array.isArray(answers[q.id])) {
+                            answers[q.id] = [];
+                        }
+                    });
+
+                    watch(answers, () => { saveToLocalStorage(); }, { deep: true });
+                    document.getElementById('darkToggle').addEventListener('click', toggleDark);
+                });
+
+                return {
+                    currentSection, totalSections, totalQuestions, currentQuestions, sectionTitle, answers,
+                    activePrompt, activePromptLabel, answeredCount, progressPercent, isCurrentSectionIncomplete, isSending,
+                    tracks, topTrack, interpretation, nextSteps,
+                    goToInterview, nextSection, prevSection, resetAll, generatePrompt, copyPrompt,
+                    exportTXT, exportPDF, exportCSV, kirimKeSpreadsheet
+                };
+            }
+        });
+        app.mount('#app');
+    </script>
+</body>
+</html>
